@@ -20,3 +20,4 @@ studies of accelerator components or antenna designs.
 
 
 PICSA only works with python 3.6 due to the CST libraries. 
+PICSA cannot work if the CST file is already opened in CST 
