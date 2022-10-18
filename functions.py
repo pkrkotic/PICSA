@@ -1,6 +1,6 @@
 #################################################
 
-# CST Wakefield Impedance Solver Tool Version 0.1
+# PICSA Version 0.1
 # By Patrick Krkotic
 
 #################################################
@@ -32,42 +32,29 @@ import cst.results
 
 
 
-
-
-################################ Open CST, open the project and run the Wakefield Solver
+############ Open CST file, change parameters and run the Wakefield Solver
 
 def wakefield_cst(path,**kwargs):
     parameter_preamble = 'Sub Main () '
     parameters = []
     parameter_appendix = '\nRebuildOnParametricChange (bfullRebuild, bShowErrorMsgBox)\nEnd Sub'
-
     para = list(kwargs.keys())
     tara = list(kwargs.values())
     parameters.append(parameter_preamble)
-
     for todo in np.arange(len(kwargs)):
         parameters.append('\nStoreParameter("' + str(para[todo]) + '", ' + str(tara[todo]) + ')')
-
     parameters.append(parameter_appendix)
-
     parameter_changes = ''.join(parameters)
-
     the_cst = cst.interface.DesignEnvironment()
     cst_opener = cst.interface.DesignEnvironment.open_project(the_cst, str(path))
     print(Fore.BLUE + 'Project opened' + Style.RESET_ALL)
     cst.interface.DesignEnvironment.in_quiet_mode = True
-    # parameter_changes = 'Sub Main () \nStoreParameter("xDip", ' + str(x_source) + ')\nStoreParameter("yDip",' + str(
-    #     y_source) + ')\nStoreParameter("xInt",' + str(x_integral) + ')\nStoreParameter("yInt",' + str(
-    #     y_integral) + ')\nStoreParameter("cpw", ' + str(cpw) + ')\nRebuildOnParametricChange (bfullRebuild, bShowErrorMsgBox)\nEnd Sub'
     cst_opener.schematic.execute_vba_code(parameter_changes, timeout=None)
     print('Solver started')
     runscript = cst_opener.modeler.run_solver()
-
     protocol_path = CST_protocols(path)
-
     print('Solver finished and closing CST')
     cst.interface.DesignEnvironment.close(the_cst)
-
     os.remove(protocol_path + 'Model.log')
     os.remove(protocol_path + 'output.txt')
     return runscript
@@ -75,10 +62,7 @@ def wakefield_cst(path,**kwargs):
 
 
 
-
-
-
-################################ Extract CST Results
+############ Extract CST Results
 
 def get_wakefield_results(path):
 
@@ -118,12 +102,7 @@ def get_wakefield_results(path):
             else:
                 counter = counter + 1
 
-
-
     return Ximpedance_cst, Yimpedance_cst, Zimpedance_cst
-
-
-
 
 
 
@@ -149,9 +128,6 @@ def plot_wakefield_results(Ximpedance_cst,Yimpedance_cst,Zimpedance_cst):
     ax.plot(frequency, np.abs(ZImpedance), label='Z-component', linewidth=3.0)
     ax.set_xlabel(r'Frequency [GHz]', fontsize=15, fontweight='bold')
     ax.set_ylabel(r'Z[$\Omega$]', fontsize=15, fontweight='bold')
-    # ax.set_title('Absolute Impedance: Source (' + str(dict.CSTpaths[0]) +',' + str(dict.CSTpaths[1]) + \
-    #                  ') and Integration (' + str(dict.CSTpaths[2]) +',' + str(dict.CSTpaths[3]) + ')' , fontsize=10, \
-    #                  fontweight='bold')
     ax.set_title('Absolute Impedance', fontsize=10, fontweight='bold')
     ax.grid(alpha=0.8)
     ax.legend(fontsize=12)
@@ -174,7 +150,6 @@ def plot_wakefield_results(Ximpedance_cst,Yimpedance_cst,Zimpedance_cst):
                 break
             else:
                 counter = counter + 1
-
     plt.show()
 
 
@@ -187,9 +162,6 @@ def plot_wakefield_results(Ximpedance_cst,Yimpedance_cst,Zimpedance_cst):
     ax2.plot(frequency, np.real(ZImpedance), label='Z-component', linewidth=3.0)
     ax2.set_xlabel(r'Frequency [GHz]', fontsize=15, fontweight='bold')
     ax2.set_ylabel(r'Z[$\Omega$]', fontsize=15, fontweight='bold')
-    # ax2.set_title('Real Impedance: Source (' + str(dict.CSTpaths[0]) + ',' + str(dict.CSTpaths[1]) + \
-    #              ') and Integration (' + str(dict.CSTpaths[2]) + ',' + str(dict.CSTpaths[3]) + ')', fontsize=10, \
-    #              fontweight='bold')
     ax2.set_title('Real Impedance', fontsize=10, fontweight='bold')
     ax2.grid(alpha=0.8)
     for axis in ['top', 'bottom', 'left', 'right']:
@@ -222,9 +194,6 @@ def plot_wakefield_results(Ximpedance_cst,Yimpedance_cst,Zimpedance_cst):
     ax3.plot(frequency, np.imag(ZImpedance), label='Z-component', linewidth=3.0)
     ax3.set_xlabel(r'Frequency [GHz]', fontsize=15, fontweight='bold')
     ax3.set_ylabel(r'Z[$\Omega$]', fontsize=15, fontweight='bold')
-    # ax3.set_title('Imaginary Impedance: Source (' + str(dict.CSTpaths[0]) + ',' + str(dict.CSTpaths[1]) + \
-    #              ') and Integration (' + str(dict.CSTpaths[2]) + ',' + str(dict.CSTpaths[3]) + ')', fontsize=10, \
-    #              fontweight='bold')
     ax3.set_title('Imaginary Impedance', fontsize=10, fontweight='bold')
     ax3.grid(alpha=0.8)
     for axis in ['top', 'bottom', 'left', 'right']:
@@ -254,7 +223,9 @@ def plot_wakefield_results(Ximpedance_cst,Yimpedance_cst,Zimpedance_cst):
 
 
 
-################################ Fitting Functions
+
+
+############ Fitting Functions
 
 def linear_func(x, m, b):
     return m * x + b
@@ -268,10 +239,7 @@ def func_trans(x, m, b):
 
 
 
-
-############################### Impedance Evaluation
-
-###### longitudinal impedance
+############ Longitudinal impedance
 
 def longitudinal_impedance(Impedance_cst, frequency_limit, revolution_frequency):
     freq = frequency_limit
@@ -315,9 +283,6 @@ def longitudinal_impedance(Impedance_cst, frequency_limit, revolution_frequency)
                                                                         oneSigmaVariance_imag[1]))
     ax4.set_xlabel(r'Frequency [GHz]', fontsize=15, fontweight='bold')
     ax4.set_ylabel(r'Z[$\Omega$]', fontsize=15, fontweight='bold')
-    # ax4.set_title('Imaginary Impedance: Source (' + str(dict.CSTpaths[0]) + ',' + str(dict.CSTpaths[1]) + \
-    #               ') and Integration (' + str(dict.CSTpaths[2]) + ',' + str(dict.CSTpaths[3]) + ')', fontsize=10, \
-    #               fontweight='bold')
     ax4.set_title('Imaginary Impedance', fontsize=10, fontweight='bold')
     ax4.grid(alpha=0.8)
     for axis in ['top', 'bottom', 'left', 'right']:
@@ -386,9 +351,6 @@ def longitudinal_impedance(Impedance_cst, frequency_limit, revolution_frequency)
                                                                         oneSigmaVariance_real[1]))
     ax6.set_xlabel(r'Frequency [GHz]', fontsize=15, fontweight='bold')
     ax6.set_ylabel(r'Z[$\Omega$]', fontsize=15, fontweight='bold')
-    # ax6.set_title('Real Impedance: Source (' + str(dict.CSTpaths[0]) + ',' + str(dict.CSTpaths[1]) + \
-    #               ') and Integration (' + str(dict.CSTpaths[2]) + ',' + str(dict.CSTpaths[3]) + ')', fontsize=10, \
-    #               fontweight='bold')
     ax6.set_title('Real Impedance', fontsize=10, fontweight='bold')
     ax6.grid(alpha=0.8)
     for axis in ['top', 'bottom', 'left', 'right']:
@@ -435,7 +397,13 @@ def longitudinal_impedance(Impedance_cst, frequency_limit, revolution_frequency)
     return Z_over_n, pars_imag, oneSigmaVariance_imag, Z_over_n_real, pars_real, oneSigmaVariance_real
 
 
-###### transverse impedance
+
+
+
+
+
+
+############ Transverse impedance
 
 def transverse_impedance(Impedance_cst, frequency_limit, displacement, Impedance_cst_centered, beta, beta_average):
 
@@ -476,9 +444,6 @@ def transverse_impedance(Impedance_cst, frequency_limit, displacement, Impedance
                                                              np.average(np.imag(fit_impedance_trans2))))
     ax5.set_xlabel(r'Frequency [GHz]', fontsize=15, fontweight='bold')
     ax5.set_ylabel(r'Z[$\Omega$/m]', fontsize=15, fontweight='bold')
-    # ax5.set_title('Imaginary Impedance: Source (' + str(dict.CSTpaths[0]) + ',' + str(dict.CSTpaths[1]) + \
-    #               ') and Integration (' + str(dict.CSTpaths[2]) + ',' + str(dict.CSTpaths[3]) + ')', fontsize=10, \
-    #               fontweight='bold')
     ax5.set_title('Absolute Impedance', fontsize=10, fontweight='bold')
     ax5.grid(alpha=0.8)
     for axis in ['top', 'bottom', 'left', 'right']:
@@ -536,6 +501,7 @@ def transverse_impedance(Impedance_cst, frequency_limit, displacement, Impedance
 
 
 
+############ Pathsplit
 
 def pathsplitter(path):
     dict.filename = path.split('/')[-1]
@@ -546,6 +512,10 @@ def pathsplitter(path):
 
 
 
+
+
+
+############ Extraction of CST protocolls and messages
 
 def CST_protocols(path):
     protocol_path = path.split('.')[0] + '/Result/'
@@ -576,6 +546,9 @@ def CST_protocols(path):
 
     return protocol_path
 
+
+
+############ Open CST file, change parameters and run the Eigenmode Solver
 
 def eigenmode_cst(path, **kwargs):
 
@@ -611,6 +584,9 @@ def eigenmode_cst(path, **kwargs):
     os.remove(protocol_path + 'output.txt')
     return runscript
 
+
+
+############ export the eigenmode results of the pre-defined post-processing in CST
 
 def get_eigenmode_results(path, *args):
 
@@ -697,6 +673,9 @@ def get_eigenmode_results(path, *args):
     return post_results
 
 
+
+############ calculate longitudinal LRC impedance 
+
 def resonant_impedance(qfactor, resonance, shunt, f_start, f_stop, f_points):
 
     frequency_range = np.logspace(f_start, f_stop, f_points)
@@ -752,6 +731,4 @@ def resonant_impedance(qfactor, resonance, shunt, f_start, f_stop, f_points):
                 counter = counter + 1
 
     plt.show()
-
-
     return sum_res_impedance
