@@ -17,28 +17,3 @@ outputs- are summarised in the attached figure. The main idea
 is to upload the source code in GitHub for sharing and further 
 collaborative development for automated processes, e.g. impedance
 studies of accelerator components or antenna designs.
-
-
-# Python Packages: 
-import sys \n
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy import optimize, stats
-from matplotlib.pyplot import plot, draw, show
-import colorama
-from colorama import Fore, Style
-import dictionary as dict
-import os.path
-import shutil
-import csv
-
-
-
-#Include the path where CST is installed on your local device
-sys.path.append(r"C:/Program Files (x86)/CST Studio Suite 2020/AMD64/python_cst_libraries")
-
-#CST Python Packages
-import cst
-import cst.interface
-from cst.interface import Project
-import cst.results
