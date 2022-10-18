@@ -17,3 +17,6 @@ outputs- are summarised in the attached figure. The main idea
 is to upload the source code in GitHub for sharing and further 
 collaborative development for automated processes, e.g. impedance
 studies of accelerator components or antenna designs.
+
+
+PICSA only works with python 3.6 due to the CST libraries. 
