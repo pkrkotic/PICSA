@@ -1,5 +1,5 @@
 # PICSA
-Python Induced CST Solver Automation V0.1
+Python Induced CST Solver Automation V 0.1
 
 PICSA is a python based code capable of communicating with CST
 and giving instructions to CST. The code can open and close
