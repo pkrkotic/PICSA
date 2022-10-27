@@ -108,7 +108,7 @@ for DRFangle in angles:
     ##Eigenmode Study
     #######
     try:
-        path = 'C:/Users/pakrkoti/cernbox/Documents/DRF/Simulations/CST/DRF_63/test.cst'
+        path = 'C:/Users/Simulations/CST/DRF_63/test.cst'
         pathsplitter(path)
         start = time.time()
         simulation_counter = simulation_counter + 1
